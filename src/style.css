@@ -1,0 +1,86 @@
+@font-face {
+  font-family: "Mollen";
+  src: url("./fonts/Mollen\ Personal\ Use-Regular.otf");
+}
+:root {
+  font-size: 16px;
+  padding: 0;
+  margin: 0;
+}
+body {
+  background-image: linear-gradient(to top,rgb(82, 82, 227),#7575a8);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+nav {
+  height: 10%;
+  width: 1000px;
+  display: grid;
+  grid-template-columns: 2fr 3fr 1fr;
+  justify-items: center;
+  align-items: center;
+  color: white;
+  font-family: "Mollen";
+}
+#sitename {
+  font-weight: bolder;
+  font-size: 2.5rem;
+}
+#search {
+  display: flex;
+  margin-left: 25px;
+}
+#searchinput {
+  display: flex;
+  align-items: center;
+  background-color: rgb(28, 28, 28);
+  width: 350px;
+  height: 40px;
+  box-sizing: border-box;
+  color: white;
+  border: none;
+  padding: 0px 30px;
+  border-radius: 50px;
+  border: 4px;
+  transition: 0.05s;
+  font-size: 1.5rem;
+  outline: none;
+}
+#searchinput:focus {
+  border: 2px white solid;
+}
+#searchimg {
+  position: relative;
+  background: url('./img/search.svg');
+  background-size: cover;
+  width: 25px;
+  height: 25px;
+  right: 45px;
+  top: 8px;
+  cursor: pointer;
+}
+
+#units {
+  display: flex;
+  gap: 20px;
+}
+#selectc,
+#selectf {
+  border-style: none;
+  border-radius: 20px;
+  font-size: 2rem;
+  width: 60px;
+  height: 50px;
+  color:black;
+  background-color: rgb(255, 255, 255);
+  cursor: pointer;
+  transition: 0.05s;
+}
+#selectc:focus,#selectf:focus {
+  border: 4px black solid;
+}
