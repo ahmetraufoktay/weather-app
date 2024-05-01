@@ -109,10 +109,9 @@ main {
   background-size: cover;
   grid-area: right;
 }
-#iconweather {
-  background-image: url("./img/weathericon.svg");
-  background-size: cover;
+#iconcontainer {
   grid-area: weather;
+  overflow: hidden;
 }
 #date {
   grid-area: date;
@@ -189,7 +188,11 @@ main {
     width: 70px;
     height: 75px;
   }
-  #iconweather {
+  #iconcontainer {
+    width: 150px;
+    height: 150px;
+  }
+  .iconweather {
     width: 150px;
     height: 150px;
   }
@@ -313,7 +316,11 @@ main {
     width: 90px;
     height: 100px;
   }
-  #iconweather {
+  #iconcontainer {
+    width: 200px;
+    height: 200px;
+  }
+  .iconweather {
     width: 200px;
     height: 200px;
   }
@@ -425,7 +432,11 @@ main {
     width: 90px;
     height: 100px;
   }
-  #iconweather {
+  #iconcontainer {
+    width: 200px;
+    height: 200px;
+  }
+  .iconweather {
     width: 200px;
     height: 200px;
   }
