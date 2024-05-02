@@ -121,11 +121,6 @@ main {
   font-weight: bolder;
 }
 
-.randomicon {
-  background-image: url("./img/weathericon.svg");
-  background-size: cover;
-}
-
 @media only screen and (max-width: 600px) {
   body {
     overflow-x: hidden;
@@ -218,7 +213,11 @@ main {
     grid-template-rows: repeat(24, auto);
     overflow-x: scroll;
   }
+  .hour:first-of-type {
+    border-top: none;
+  }
   .hour {
+    border-top: 2px black solid;
     width: 180px;
     height: 150px;
     display: grid;
@@ -249,11 +248,11 @@ main {
 @media only screen and (min-width: 601px) and (max-width: 1050px) {
   /* scrollbar style */
   ::-webkit-scrollbar {
-    height: 5px;
+    height: 10px;
   }
   ::-webkit-scrollbar-track {
     background: #ffffff;
-    box-shadow: 0 0 5px 3px #fff;
+    border-radius: 10px;
   }
   ::-webkit-scrollbar-thumb {
     background: #1f9c09;
@@ -328,7 +327,7 @@ main {
     font-size: 1.5rem;
   }
   #degree {
-    font-size: 8rem;
+    font-size: 15vw;
   }
 
   #mainhourly {
@@ -364,12 +363,10 @@ main {
   }
   ::-webkit-scrollbar-track {
     background: #ffffff;
-    box-shadow: 0 0 5px 3px #fff;
     border-radius: 10px;
   }
   ::-webkit-scrollbar-thumb {
     background: #1f9c09;
-    border-radius: 10px;
   }
   ::-webkit-scrollbar-thumb:hover {
     background: #187907;
