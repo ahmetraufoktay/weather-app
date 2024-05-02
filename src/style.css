@@ -58,15 +58,14 @@ nav {
 }
 #selectc,
 #selectf {
-  border-style: none;
+  border-style: solid;
   font-weight: bold;
   background-color: rgb(28, 28, 28);
   cursor: pointer;
   transition: 0.05s;
   color: white;
 }
-#selectc:focus,
-#selectf:focus {
+.selected {
   border: 2px white solid;
 }
 

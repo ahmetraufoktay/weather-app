@@ -28,6 +28,7 @@ const months = [
 ];
 
 let weatherData;
+let unit;
 let currentDay = 0;
 
 function importAll(r) {
@@ -47,7 +48,43 @@ async function getWeather(place) {
   const weatherData = await responseResult;
   return weatherData;
 }
-weatherData = await getWeather("Istanbul");
+
+if (localStorage.getItem("lastLocation") === null) {
+  weatherData = await getWeather("Istanbul");
+} else {
+  weatherData = await getWeather(localStorage.getItem("lastLocation"));
+}
+
+const selectc = document.getElementById("selectc");
+const selectf = document.getElementById("selectf");
+
+selectc.addEventListener("click", () => {
+  localStorage.setItem("system", "C");
+  selectc.classList = "selected";
+  selectf.classList.remove("selected");
+  window.location = window.location;
+});
+
+selectf.addEventListener("click", () => {
+  localStorage.setItem("system", "F");
+  selectf.classList = "selected";
+  selectc.classList.remove("selected");
+  window.location = window.location;
+});
+
+if (localStorage.getItem("system") === null) {
+  unit = "C";
+  selectc.classList = "selected";
+  selectf.classList.remove("selected");
+} else if (localStorage.getItem("system") === "C") {
+  unit = "C";
+  selectc.classList = "selected";
+  selectf.classList.remove("selected");
+} else if (localStorage.getItem("system") === "F") {
+  unit = "F";
+  selectf.classList = "selected";
+  selectc.classList.remove("selected");
+}
 
 const dayImages = importAll(
   require.context("./img/weathers/day", false, /\.(png|jpe?g|svg)$/),
@@ -56,7 +93,7 @@ const nightImages = importAll(
   require.context("./img/weathers/night", false, /\.(png|jpe?g|svg)$/),
 );
 
-changeDom(weatherData);
+changeDom(weatherData, 0, unit);
 
 function setBackground(imgSrc, element, path) {
   element.style.backgroundImage = `url(${imgSrc[`${path}.svg`]})`;
@@ -85,7 +122,7 @@ function createHours(
     const hourtemp = document.createElement("hourtemp");
     hourtemp.classList = "hourtemp";
     hourtemp.innerHTML =
-      system === "C" ? path[i].temp_c : parseInt(path[i].temp_f);
+      system === "C" ? `${path[i].temp_c} °C` : `${path[i].temp_f} °F`;
 
     hour.appendChild(hourtext);
     hour.appendChild(randomicon);
@@ -162,7 +199,8 @@ const search = document.getElementById("searchimg");
 search.addEventListener("click", async () => {
   let text = document.getElementById("searchinput").value;
   weatherData = await getWeather(text);
-  changeDom(weatherData, currentDay);
+  localStorage.setItem("lastLocation", text);
+  changeDom(weatherData, currentDay, unit);
 });
 
 const dayRight = document.getElementById("dayright");
@@ -172,7 +210,7 @@ dayRight.addEventListener("click", async () => {
   } else {
     currentDay++;
   }
-  changeDom(weatherData, currentDay);
+  changeDom(weatherData, currentDay, unit);
 });
 
 const dayLeft = document.getElementById("dayleft");
@@ -182,5 +220,5 @@ dayLeft.addEventListener("click", async () => {
   } else {
     currentDay--;
   }
-  changeDom(weatherData, currentDay);
+  changeDom(weatherData, currentDay, unit);
 });
