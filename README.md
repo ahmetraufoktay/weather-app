@@ -1,3 +1,2 @@
-Site Template with Webpack, Eslint and Prettier.
-Webpack : HtmlWebpackPlugin,style-loader,css-loader
-ESLint : Air-Bnb Style
+Weather Application using Weather API with interface.
+SITE : https://ahmetraufoktay.github.io/weather-app/
