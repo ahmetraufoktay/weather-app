@@ -1,5 +1,6 @@
 import "./style.css";
-import { getDay } from "date-fns";
+
+const getDay = (date) => date.getDay();
 
 const week = [
   "Sunday",
@@ -26,6 +27,9 @@ const months = [
   "December",
 ];
 
+let weatherData;
+let currentDay = 0;
+
 function importAll(r) {
   let images = {};
   r.keys().map((item, index) => {
@@ -43,7 +47,7 @@ async function getWeather(place) {
   const weatherData = await responseResult;
   return weatherData;
 }
-const weatherData = await getWeather("Istanbul");
+weatherData = await getWeather("Istanbul");
 
 const dayImages = importAll(
   require.context("./img/weathers/day", false, /\.(png|jpe?g|svg)$/),
@@ -59,10 +63,39 @@ function setBackground(imgSrc, element, path) {
   element.style.backgroundSize = "cover";
 }
 
-function changeDom(data) {
+function createHours(
+  imgSrc,
+  system = "C",
+  path = weatherData.forecast.forecastday[0].hour,
+) {
+  const mainhourly = document.getElementById("mainhourly");
+  mainhourly.innerHTML = "";
+  for (let i = 0; i < 24; i++) {
+    const hour = document.createElement("div");
+    hour.classList = "hour";
+
+    const hourtext = document.createElement("div");
+    hourtext.classList = "hourtext";
+    hourtext.innerHTML = path[i].time.split(" ")[1];
+
+    const randomicon = document.createElement("div");
+    randomicon.classList = "randomicon";
+    setBackground(imgSrc, randomicon, path[i].condition.code);
+
+    const hourtemp = document.createElement("hourtemp");
+    hourtemp.classList = "hourtemp";
+    hourtemp.innerHTML =
+      system === "C" ? path[i].temp_c : parseInt(path[i].temp_f);
+
+    hour.appendChild(hourtext);
+    hour.appendChild(randomicon);
+    hour.appendChild(hourtemp);
+
+    mainhourly.appendChild(hour);
+  }
+}
+function changeDom(data, dayIndex = 0, system = "C") {
   const todayIcon = document.getElementById("today");
-  const tomorrowIcon = document.getElementById("tomorrow");
-  const overmorrowIcon = document.getElementById("overmorrow");
   const datetext = document.getElementById("date");
 
   const country = document.getElementById("country");
@@ -76,27 +109,43 @@ function changeDom(data) {
     imgSrc = nightImages;
   }
 
-  setBackground(imgSrc, todayIcon, data.current.condition.code);
+  createHours(imgSrc, system, data.forecast.forecastday[dayIndex].hour);
+
   setBackground(
     imgSrc,
-    tomorrowIcon,
-    data.forecast.forecastday[1].day.condition.code,
-  );
-  setBackground(
-    imgSrc,
-    overmorrowIcon,
-    data.forecast.forecastday[2].day.condition.code,
+    todayIcon,
+    data.forecast.forecastday[dayIndex].day.condition.code,
   );
 
   country.innerHTML = data.location.country;
   province.innerHTML = data.location.name + ", ";
-  nowDegree.innerHTML = data.current.temp_c + "°C";
 
-  let currentdate = data.current.last_updated;
-  let currentDMY = currentdate.split(" ")[0].split("-").reverse();
+  const temperature =
+    system === "C"
+      ? {
+          now: data.current.temp_c,
+          forecast: data.forecast.forecastday[dayIndex].day.avgtemp_c,
+        }
+      : {
+          now: data.current.temp_f,
+          forecast: data.forecast.forecastday[dayIndex].day.avgtemp_f,
+        };
+
+  nowDegree.innerHTML =
+    dayIndex === 0
+      ? `${Math.round(temperature.now, 1)} °${system}`
+      : `${Math.round(parseInt(temperature.forecast), 1)} °${system}`;
+
+  let currentdate = data.forecast.forecastday[dayIndex].date;
+  let currentDMY = currentdate.split("-").reverse();
   let todayWeek =
-    week[getDay(new Date(currentdate[0], currentdate[1], currentdate[2]))];
+    week[getDay(new Date(+currentDMY[2], +currentDMY[1] - 1, +currentDMY[0]))];
   currentDMY[1] = months[+currentdate.split(" ")[0].split("-")[1]];
+
+  let extraHour = "";
+  if (dayIndex == 0) {
+    extraHour = " | " + data.location.localtime.split(" ")[1];
+  }
   datetext.innerHTML =
     todayWeek +
     " " +
@@ -105,14 +154,33 @@ function changeDom(data) {
     currentDMY[1] +
     " " +
     currentDMY[2] +
-    " | " +
-    currentdate.split(" ")[1];
+    extraHour;
   console.log(data);
 }
 
 const search = document.getElementById("searchimg");
 search.addEventListener("click", async () => {
   let text = document.getElementById("searchinput").value;
-  let data = await getWeather(text);
-  changeDom(data);
+  weatherData = await getWeather(text);
+  changeDom(weatherData, currentDay);
+});
+
+const dayRight = document.getElementById("dayright");
+dayRight.addEventListener("click", async () => {
+  if (currentDay === 2) {
+    currentDay = 0;
+  } else {
+    currentDay++;
+  }
+  changeDom(weatherData, currentDay);
+});
+
+const dayLeft = document.getElementById("dayleft");
+dayLeft.addEventListener("click", async () => {
+  if (currentDay === 0) {
+    currentDay = 2;
+  } else {
+    currentDay--;
+  }
+  changeDom(weatherData, currentDay);
 });
